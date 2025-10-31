@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shirt Number Hi-Lo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. Global & Reset Styles --- */
+        :root {
+            --color-green: #5cb85c;
+            --color-red: #d9534f;
+            --color-blue: #00529B; /* Jersey primary color */
+            --color-white: #ffffff;
+            --color-dark: #222222;
+            --color-text: #f0f0f0;
+            --font-main: 'Inter', sans-serif;
+            --reveal-time: 400ms;
+            --result-time: 1000ms;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #1a1a1a;
+            /* High-quality football pitch background */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- 2. Main Game Layout --- */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            width: 100%;
+            max-width: 900px;
+            min-height: 100vh;
+            text-align: center;
+            /* Added for animation feedback */
+            border: 4px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- 3. Scoreboard --- */
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .score-box {
+            flex: 1;
+        }
+
+        .score-box h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #aaa;
+        }
+
+        .score-box span {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1;
+            display: block;
+            color: var(--color-white);
+        }
+
+        /* Score "Pop" Animation */
+        #current-streak.pop {
+            animation: pop-animation 0.3s ease-out;
+        }
+
+        @keyframes pop-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- 4. Game & Card Area --- */
+        .game-area {
+            display: flex;
+            flex-direction: column; /* Mobile-first: stacked */
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .card-container h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #ccc;
+        }
+
+        /* The Football Jersey "Card" */
+        .jersey {
+            width: 100%;
+            aspect-ratio: 4 / 4.5; /* Slightly taller than wide */
+            max-width: 240px;
+            margin: 0 auto;
+            border-radius: 15px 15px 8px 8px; /* Shoulders */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), inset 0 4px 10px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            background-color: var(--color-blue);
+            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Jersey Collar */
+        .jersey::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            width: 60px;
+            height: 30px;
+            border: 5px solid var(--color-white);
+            border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
+            background: var(--color-blue);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .jersey span {
+            font-size: 100px;
+            font-weight: 900;
+            color: var(--color-white);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: color 0.3s ease;
+        }
+
+        /* "Hidden" State for Next Card */
+        #next-jersey {
+            background-color: var(--color-dark);
+            opacity: 0.8;
+            transform: scale(0.95);
+        }
+        
+        #next-jersey::before {
+            background-color: var(--color-dark);
+            border-color: #444;
+        }
+
+        #next-jersey span {
+            color: #666;
+        }
+        
+        /* "Reveal" Animation State */
+        #next-jersey.reveal {
+            background-color: var(--color-red); /* Reveals as a new color */
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #next-jersey.reveal::before {
+            background-color: var(--color-red);
+            border-color: var(--color-white);
+        }
+
+        #next-jersey.reveal span {
+            color: var(--color-white);
+        }
+        
+        /* --- 5. Controls & Messages --- */
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .controls button {
+            font-family: var(--font-main);
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            color: var(--color-white);
+            min-width: 140px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .controls button:active:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        #btn-lower {
+            background-color: var(--color-red);
+        }
+
+        #btn-higher {
+            background-color: var(--color-green);
+        }
+
+        #message-area {
+            font-size: 1.5rem;
+            font-weight: 700;
+            height: 40px; /* Reserve space */
+            line-height: 40px;
+            margin-bottom: 10px;
+        }
+
+        #btn-restart {
+            font-family: var(--font-main);
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 15px 40px;
+            border: 2px solid var(--color-white);
+            border-radius: 50px;
+            cursor: pointer;
+            color: var(--color-white);
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        #btn-restart:hover {
+            background-color: var(--color-white);
+            color: var(--color-dark);
+        }
+        
+        /* --- 6. Helper & Animation Classes --- */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Feedback Animations */
+        .game-container.win-flash {
+            animation: flash-green 0.5s ease-out;
+        }
+        
+        .game-container.loss-flash {
+            animation: flash-red 0.5s ease-out;
+        }
+
+        @keyframes flash-green {
+            50% { 
+                border-color: var(--color-green);
+                box-shadow: 0 0 30px var(--color-green);
+            }
+        }
+
+        @keyframes flash-red {
+            50% { 
+                border-color: var(--color-red);
+                box-shadow: 0 0 30px var(--color-red);
+            }
+        }
+
+        /* --- 7. Responsive (Desktop) --- */
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            .game-container {
+                justify-content: center;
+            }
+
+            /* Place cards side-by-side on desktop */
+            .game-area {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: center;
+                gap: 50px;
+                margin-bottom: 40px;
+            }
+
+            .card-container {
+                max-width: 300px;
+            }
+
+            .jersey {
+                max-width: 300px;
+            }
+
+            .jersey span {
+                font-size: 120px;
+            }
+
+            .controls button {
+                font-size: 1.5rem;
+                min-width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="game-container" id="game-container">
+
+        <h1>Shirt Number Hi-Lo</h1>
+
+        <div class="scoreboard">
+            <div class="score-box">
+                <h2>Current Streak</h2>
+                <span id="current-streak">0</span>
+            </div>
+            <div class="score-box">
+                <h2>High Score</h2>
+                <span id="high-score">0</span>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="card-container" id="current-card-container">
+                <h3>Current</h3>
+                <div class="jersey" id="current-jersey">
+                    <span id="current-number">?</span>
+                </div>
+            </div>
+            <div class="card-container" id="next-card-container">
+                <h3>Next</h3>
+                <div class="jersey" id="next-jersey">
+                    <span id="next-number">?</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls" id="controls-area">
+            <button id="btn-lower">▼ Lower</button>
+            <button id="btn-higher">▲ Higher</button>
+        </div>
+
+        <p id="message-area">Loading game...</p>
+
+        <div class="game-over-area">
+            <button id="btn-restart" class="hidden">Play Again</button>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. DOM Element Selection ---
+            const currentStreakEl = document.getElementById('current-streak');
+            const highScoreEl = document.getElementById('high-score');
+            const currentNumberEl = document.getElementById('current-number');
+            const nextNumberEl = document.getElementById('next-number');
+            const currentJerseyEl = document.getElementById('current-jersey');
+            const nextJerseyEl = document.getElementById('next-jersey');
+            const btnLower = document.getElementById('btn-lower');
+            const btnHigher = document.getElementById('btn-higher');
+            const btnRestart = document.getElementById('btn-restart');
+            const messageArea = document.getElementById('message-area');
+            const gameContainer = document.getElementById('game-container');
+            const controlsArea = document.getElementById('controls-area');
+
+            // --- 2. Game State Variables ---
+            let deck = [];
+            let currentCard = 0;
+            let nextCard = 0;
+            let currentStreak = 0;
+            let highScore = 0;
+            let isRevealing = false; // Prevents spam-clicking
+
+            // --- 3. Core Game Functions ---
+
+            /**
+             * Creates a new deck of 23 numbers (1-23).
+             */
+            function createDeck() {
+                const newDeck = [];
+                for (let i = 1; i <= 23; i++) {
+                    newDeck.push(i);
+                }
+                return newDeck;
+            }
+
+            /**
+             * Shuffles the deck using the Fisher-Yates algorithm.
+             */
+            function shuffleDeck() {
+                deck = createDeck();
+                // Start from the last element and swap with a random one before it
+                for (let i = deck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    // Swap elements
+                    [deck[i], deck[j]] = [deck[j], deck[i]];
+                }
+            }
+
+            /**
+             * Draws a single card. If the deck is empty,
+             * it automatically creates and shuffles a new one.
+             */
+            function drawCard() {
+                if (deck.length === 0) {
+                    console.log("--- Reshuffling deck (infinite deck) ---");
+                    shuffleDeck();
+                }
+                return deck.pop();
+            }
+
+            /**
+             * Initializes or restarts the game.
+             */
+            function initGame() {
+                shuffleDeck();
+                
+                // Load high score from localStorage
+                highScore = localStorage.getItem('shirtHiLoHighScore') || 0;
+                highScoreEl.textContent = highScore;
+                
+                currentStreak = 0;
+                currentStreakEl.textContent = currentStreak;
+                
+                // Draw the first card
+                currentCard = drawCard();
+                currentNumberEl.textContent = currentCard;
+                
+                // Reset UI
+                messageArea.textContent = 'Guess higher or lower!';
+                btnRestart.classList.add('hidden');
+                controlsArea.classList.remove('hidden');
+                setButtonsDisabled(false);
+                
+                // Reset the "next" card to its hidden state
+                nextJerseyEl.classList.remove('reveal');
+                nextNumberEl.textContent = '?';
+                
+                isRevealing = false;
+            }
+
+            /**
+             * Main game logic handler when a player makes a guess.
+             * @param {string} guess - Either 'higher' or 'lower'.
+             */
+            function checkGuess(guess) {
+                if (isRevealing) return; // Don't allow clicks during reveal
+
+                isRevealing = true;
+                setButtonsDisabled(true);
+
+                // 1. Draw the next card
+                nextCard = drawCard();
+                
+                // 2. Start the reveal animation
+                nextNumberEl.textContent = nextCard;
+                nextJerseyEl.classList.add('reveal'); // Triggers CSS transition
+
+                // 3. Determine win/loss
+                // Note: A tie (nextCard === currentCard) counts as a LOSS.
+                let isCorrect = false;
+                if (guess === 'higher' && nextCard > currentCard) {
+                    isCorrect = true;
+                } else if (guess === 'lower' && nextCard < currentCard) {
+                    isCorrect = true;
+                }
+                
+                // 4. Wait for the reveal animation to finish
+                setTimeout(() => {
+                    if (isCorrect) {
+                        handleWin();
+                    } else {
+                        handleLoss();
+                    }
+                }, 500); // Wait 500ms (matches CSS animation)
+            }
+
+            /**
+             * Handles the "Win" scenario.
+             */
+            function handleWin() {
+                messageArea.textContent = 'Correct!';
+                gameContainer.classList.add('win-flash');
+                
+                // Increment streak and add "pop" animation
+                currentStreak++;
+                currentStreakEl.textContent = currentStreak;
+                currentStreakEl.classList.add('pop');
+
+                // Wait for the player to see the result
+                setTimeout(() => {
+                    // 1. Move the "next" card to the "current" position
+                    currentCard = nextCard;
+                    currentNumberEl.textContent = currentCard;
+                    
+                    // 2. Reset the "next" card to its hidden state
+                    nextJerseyEl.classList.remove('reveal');
+                    
+                    // 3. Reset UI for the next turn
+                    messageArea.textContent = 'Guess higher or lower!';
+                    gameContainer.classList.remove('win-flash');
+                    currentStreakEl.classList.remove('pop');
+                    
+                    // 4. Re-enable buttons
+                    setButtonsDisabled(false);
+                    isRevealing = false;
+
+                    // Set '?' text *after* the hide animation starts
+                    setTimeout(() => {
+                        nextNumberEl.textContent = '?';
+                    }, 300); // Must be less than the transition time
+
+                }, 1000); // 1 second to read "Correct!"
+            }
+
+            /**
+             * Handles the "Loss" scenario.
+             */
+            function handleLoss() {
+                messageArea.textContent = `Wrong! It was ${nextCard}.`;
+                gameContainer.classList.add('loss-flash');
+                
+                // Check and update high score
+                if (currentStreak > highScore) {
+                    highScore = currentStreak;
+                    highScoreEl.textContent = highScore;
+                    localStorage.setItem('shirtHiLoHighScore', highScore);
+                }
+                
+                // Reset streak
+                currentStreak = 0;
+                currentStreakEl.textContent = 0;
+                
+                // Hide controls and show "Play Again" button
+                controlsArea.classList.add('hidden');
+                btnRestart.classList.remove('hidden');
+                
+                // Remove flash after animation
+                setTimeout(() => {
+                    gameContainer.classList.remove('loss-flash');
+                }, 500);
+                
+                // Game is over, isRevealing stays true (or irrelevant) until restart
+            }
+
+            /**
+             * Helper function to enable/disable control buttons.
+             * @param {boolean} isDisabled - True to disable, false to enable.
+             */
+            function setButtonsDisabled(isDisabled) {
+                btnLower.disabled = isDisabled;
+                btnHigher.disabled = isDisabled;
+            }
+
+            // --- 4. Event Listeners ---
+            btnHigher.addEventListener('click', () => checkGuess('higher'));
+            btnLower.addEventListener('click', () => checkGuess('lower'));
+            btnRestart.addEventListener('click', initGame);
+
+            // Start the game!
+            initGame();
+        });
+    </script>
+</body>
+</html>
