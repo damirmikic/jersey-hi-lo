@@ -109,6 +109,171 @@
             100% { transform: scale(1); }
         }
 
+        /* --- Bankroll & Betting Controls --- */
+        .bankroll-panel {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .bankroll-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #ccc;
+        }
+
+        .bankroll-stats span {
+            color: var(--color-white);
+            font-size: 1.6rem;
+            margin-left: 8px;
+        }
+
+        .stake-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .stake-controls label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #b5b5b5;
+            letter-spacing: 1px;
+        }
+
+        .stake-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #stake-input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--color-white);
+        }
+
+        #stake-input:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .stake-input-row button {
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--color-white);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .stake-input-row button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .odds-display {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-weight: 600;
+            color: #d1d1d1;
+        }
+
+        .odds-display span {
+            color: var(--color-white);
+        }
+
+        .odds-display small {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .bet-history {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .bet-history h3 {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1rem;
+            color: #bdbdbd;
+            margin-bottom: 12px;
+        }
+
+        .bet-history ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .bet-history li {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: grid;
+            gap: 4px;
+        }
+
+        .bet-history li strong {
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .bet-history li span {
+            font-size: 0.9rem;
+            color: #dcdcdc;
+        }
+
+        .bet-history li .profit-positive {
+            color: var(--color-green);
+        }
+
+        .bet-history li .profit-negative {
+            color: var(--color-red);
+        }
+
+        .resource-callout {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #cccccc;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 12px 18px;
+            border-radius: 14px;
+            line-height: 1.5;
+        }
+
+        .resource-callout a {
+            color: var(--color-green);
+            font-weight: 600;
+        }
+
         /* --- 4. Game & Card Area --- */
         .game-area {
             display: flex;
@@ -311,6 +476,15 @@
                 justify-content: center;
             }
 
+            .bankroll-panel {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                align-items: start;
+            }
+
+            .stake-controls {
+                grid-column: span 2;
+            }
+
             /* Place cards side-by-side on desktop */
             .game-area {
                 flex-direction: row;
@@ -356,6 +530,26 @@
             </div>
         </div>
 
+        <section class="bankroll-panel">
+            <div class="bankroll-stats">
+                <div>Balance: <span id="balance-amount">0.00</span></div>
+                <div>High Score: <span id="high-score-bankroll">0</span></div>
+            </div>
+            <div class="stake-controls">
+                <label for="stake-input">Stake</label>
+                <div class="stake-input-row">
+                    <input type="number" id="stake-input" min="0.1" step="0.1" value="10">
+                    <button id="btn-stake-min" type="button">Min</button>
+                    <button id="btn-stake-max" type="button">Max</button>
+                </div>
+            </div>
+            <div class="odds-display">
+                <div>Higher Odds: <span id="higher-odds">—</span></div>
+                <div>Lower Odds: <span id="lower-odds">—</span></div>
+                <small>Odds update based on the remaining shirt numbers.</small>
+            </div>
+        </section>
+
         <div class="game-area">
             <div class="card-container" id="current-card-container">
                 <h3>Current</h3>
@@ -382,6 +576,15 @@
             <button id="btn-restart" class="hidden">Play Again</button>
         </div>
 
+        <section class="bet-history" aria-live="polite">
+            <h3>Bet History</h3>
+            <ul id="bet-history-list"></ul>
+        </section>
+
+        <aside class="resource-callout">
+            Looking to render realistic football jerseys? Explore the open-source <a href="https://github.com/mrdoob/three.js" target="_blank" rel="noopener noreferrer">Three.js</a> ecosystem—it powers several kit configurators and can be extended with realistic fabric shaders.
+        </aside>
+
     </main>
 
     <script>
@@ -400,6 +603,14 @@
             const messageArea = document.getElementById('message-area');
             const gameContainer = document.getElementById('game-container');
             const controlsArea = document.getElementById('controls-area');
+            const balanceAmountEl = document.getElementById('balance-amount');
+            const highScoreBankrollEl = document.getElementById('high-score-bankroll');
+            const stakeInput = document.getElementById('stake-input');
+            const btnStakeMin = document.getElementById('btn-stake-min');
+            const btnStakeMax = document.getElementById('btn-stake-max');
+            const higherOddsEl = document.getElementById('higher-odds');
+            const lowerOddsEl = document.getElementById('lower-odds');
+            const betHistoryList = document.getElementById('bet-history-list');
 
             // --- 2. Game State Variables ---
             let deck = [];
@@ -408,6 +619,10 @@
             let currentStreak = 0;
             let highScore = 0;
             let isRevealing = false; // Prevents spam-clicking
+            let balance = 0;
+            let betHistory = [];
+            let pendingBet = null;
+            let oddsSnapshot = { higher: null, lower: null };
 
             // --- 3. Core Game Functions ---
 
@@ -452,28 +667,35 @@
              */
             function initGame() {
                 shuffleDeck();
-                
+
                 // Load high score from localStorage
                 highScore = localStorage.getItem('shirtHiLoHighScore') || 0;
                 highScoreEl.textContent = highScore;
-                
+                highScoreBankrollEl.textContent = highScore;
+
                 currentStreak = 0;
                 currentStreakEl.textContent = currentStreak;
-                
+
                 // Draw the first card
                 currentCard = drawCard();
                 currentNumberEl.textContent = currentCard;
-                
+
+                loadBalance();
+                loadBetHistory();
+                updateBalanceDisplay();
+                renderBetHistory();
+
                 // Reset UI
                 messageArea.textContent = 'Guess higher or lower!';
                 btnRestart.classList.add('hidden');
                 controlsArea.classList.remove('hidden');
-                setButtonsDisabled(false);
-                
+                setButtonsDisabled(balance < 0.1);
+
                 // Reset the "next" card to its hidden state
                 nextJerseyEl.classList.remove('reveal');
                 nextNumberEl.textContent = '?';
-                
+
+                updateOddsDisplay();
                 isRevealing = false;
             }
 
@@ -487,9 +709,39 @@
                 isRevealing = true;
                 setButtonsDisabled(true);
 
+                const stakeValue = getStakeValue();
+                if (stakeValue <= 0) {
+                    messageArea.textContent = 'Enter a stake above zero to play.';
+                    resetRevealState();
+                    return;
+                }
+
+                if (stakeValue > balance) {
+                    messageArea.textContent = 'Insufficient balance for that stake.';
+                    resetRevealState();
+                    return;
+                }
+
+                const selectedOdds = guess === 'higher' ? oddsSnapshot.higher : oddsSnapshot.lower;
+                if (!selectedOdds) {
+                    messageArea.textContent = 'No valid odds available for that guess.';
+                    resetRevealState();
+                    return;
+                }
+
+                balance = roundCurrency(balance - stakeValue);
+                updateBalanceDisplay();
+                persistBalance();
+
+                pendingBet = {
+                    guess,
+                    stake: stakeValue,
+                    odds: selectedOdds
+                };
+
                 // 1. Draw the next card
                 nextCard = drawCard();
-                
+
                 // 2. Start the reveal animation
                 nextNumberEl.textContent = nextCard;
                 nextJerseyEl.classList.add('reveal'); // Triggers CSS transition
@@ -517,28 +769,54 @@
              * Handles the "Win" scenario.
              */
             function handleWin() {
-                messageArea.textContent = 'Correct!';
+                const { stake, odds, guess } = pendingBet;
+                const payout = roundCurrency(stake * odds);
+                const profit = roundCurrency(payout - stake);
+
+                balance = roundCurrency(balance + payout);
+                updateBalanceDisplay();
+                persistBalance();
+
+                messageArea.textContent = `Correct! You won ${formatCurrency(payout)} (profit ${formatCurrency(profit)}).`;
                 gameContainer.classList.add('win-flash');
-                
+
                 // Increment streak and add "pop" animation
                 currentStreak++;
                 currentStreakEl.textContent = currentStreak;
                 currentStreakEl.classList.add('pop');
+
+                if (currentStreak > highScore) {
+                    highScore = currentStreak;
+                    highScoreEl.textContent = highScore;
+                    highScoreBankrollEl.textContent = highScore;
+                    localStorage.setItem('shirtHiLoHighScore', highScore);
+                }
+
+                recordBetHistory({
+                    outcome: 'Win',
+                    guess,
+                    stake,
+                    odds,
+                    nextCard,
+                    profit,
+                    balanceAfter: balance
+                });
+                pendingBet = null;
 
                 // Wait for the player to see the result
                 setTimeout(() => {
                     // 1. Move the "next" card to the "current" position
                     currentCard = nextCard;
                     currentNumberEl.textContent = currentCard;
-                    
+
                     // 2. Reset the "next" card to its hidden state
                     nextJerseyEl.classList.remove('reveal');
-                    
+
                     // 3. Reset UI for the next turn
                     messageArea.textContent = 'Guess higher or lower!';
                     gameContainer.classList.remove('win-flash');
                     currentStreakEl.classList.remove('pop');
-                    
+
                     // 4. Re-enable buttons
                     setButtonsDisabled(false);
                     isRevealing = false;
@@ -548,6 +826,8 @@
                         nextNumberEl.textContent = '?';
                     }, 300); // Must be less than the transition time
 
+                    updateOddsDisplay();
+
                 }, 1000); // 1 second to read "Correct!"
             }
 
@@ -555,24 +835,37 @@
              * Handles the "Loss" scenario.
              */
             function handleLoss() {
-                messageArea.textContent = `Wrong! It was ${nextCard}.`;
+                const { stake, guess } = pendingBet;
+                messageArea.textContent = `Wrong! It was ${nextCard}. You lost ${formatCurrency(stake)}.`;
                 gameContainer.classList.add('loss-flash');
-                
+
                 // Check and update high score
                 if (currentStreak > highScore) {
                     highScore = currentStreak;
                     highScoreEl.textContent = highScore;
                     localStorage.setItem('shirtHiLoHighScore', highScore);
+                    highScoreBankrollEl.textContent = highScore;
                 }
-                
+
                 // Reset streak
                 currentStreak = 0;
                 currentStreakEl.textContent = 0;
-                
+
                 // Hide controls and show "Play Again" button
                 controlsArea.classList.add('hidden');
                 btnRestart.classList.remove('hidden');
-                
+
+                recordBetHistory({
+                    outcome: 'Loss',
+                    guess,
+                    stake,
+                    odds: oddsSnapshot[guess],
+                    nextCard,
+                    profit: -stake,
+                    balanceAfter: balance
+                });
+                pendingBet = null;
+
                 // Remove flash after animation
                 setTimeout(() => {
                     gameContainer.classList.remove('loss-flash');
@@ -590,10 +883,179 @@
                 btnHigher.disabled = isDisabled;
             }
 
+            function resetRevealState() {
+                isRevealing = false;
+                setButtonsDisabled(balance < 0.1);
+            }
+
+            function loadBalance() {
+                const stored = parseFloat(localStorage.getItem('shirtHiLoBalance'));
+                balance = Number.isFinite(stored) ? stored : 200;
+            }
+
+            function persistBalance() {
+                localStorage.setItem('shirtHiLoBalance', roundCurrency(balance).toFixed(2));
+            }
+
+            function updateBalanceDisplay() {
+                balanceAmountEl.textContent = formatCurrency(balance);
+                stakeInput.max = Math.max(balance, 0).toFixed(2);
+                if (balance >= 0.1) {
+                    const current = parseFloat(stakeInput.value);
+                    if (!Number.isFinite(current) || current <= 0) {
+                        stakeInput.value = formatCurrency(Math.min(10, balance));
+                    } else if (current > balance) {
+                        stakeInput.value = formatCurrency(balance);
+                    }
+                } else {
+                    stakeInput.value = '';
+                }
+                if (balance < 0.1) {
+                    setButtonsDisabled(true);
+                } else if (!isRevealing) {
+                    setButtonsDisabled(false);
+                }
+            }
+
+            function getStakeValue() {
+                const value = parseFloat(stakeInput.value);
+                if (!Number.isFinite(value) || value <= 0) {
+                    return 0;
+                }
+                return roundCurrency(value);
+            }
+
+            function updateOddsDisplay() {
+                const remaining = deck.length;
+                if (remaining <= 0) {
+                    higherOddsEl.textContent = '—';
+                    lowerOddsEl.textContent = '—';
+                    oddsSnapshot = { higher: null, lower: null };
+                    return;
+                }
+
+                const higherCount = deck.filter((value) => value > currentCard).length;
+                const lowerCount = deck.filter((value) => value < currentCard).length;
+
+                const higherProb = higherCount / remaining;
+                const lowerProb = lowerCount / remaining;
+
+                const higherOdds = probabilityToDecimalOdds(higherProb);
+                const lowerOdds = probabilityToDecimalOdds(lowerProb);
+
+                higherOddsEl.textContent = higherOdds
+                    ? `${(higherProb * 100).toFixed(1)}% (${higherOdds.toFixed(2)}x)`
+                    : '—';
+                lowerOddsEl.textContent = lowerOdds
+                    ? `${(lowerProb * 100).toFixed(1)}% (${lowerOdds.toFixed(2)}x)`
+                    : '—';
+
+                oddsSnapshot = {
+                    higher: higherOdds,
+                    lower: lowerOdds
+                };
+            }
+
+            function probabilityToDecimalOdds(probability) {
+                if (!probability || probability <= 0) {
+                    return null;
+                }
+                const decimal = 1 / probability;
+                return Math.max(1.01, decimal);
+            }
+
+            function formatCurrency(amount) {
+                return roundCurrency(amount).toFixed(2);
+            }
+
+            function roundCurrency(amount) {
+                return Math.round((Number.isFinite(amount) ? amount : 0) * 100) / 100;
+            }
+
+            function formatOddsLabel(decimalOdds) {
+                return decimalOdds ? `${decimalOdds.toFixed(2)}x` : '—';
+            }
+
+            function recordBetHistory(entry) {
+                const enriched = {
+                    timestamp: new Date().toISOString(),
+                    ...entry
+                };
+                betHistory.unshift(enriched);
+                if (betHistory.length > 12) {
+                    betHistory.pop();
+                }
+                renderBetHistory();
+                localStorage.setItem('shirtHiLoBetHistory', JSON.stringify(betHistory));
+            }
+
+            function renderBetHistory() {
+                betHistoryList.innerHTML = '';
+                if (!betHistory.length) {
+                    const emptyItem = document.createElement('li');
+                    emptyItem.innerHTML = '<span>No bets yet. Place a bet to begin your history!</span>';
+                    betHistoryList.appendChild(emptyItem);
+                    return;
+                }
+
+                betHistory.forEach((item) => {
+                    const profitClass = item.profit >= 0 ? 'profit-positive' : 'profit-negative';
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <strong>${item.outcome}</strong>
+                        <span>Guess: ${item.guess.toUpperCase()} vs ${item.nextCard}</span>
+                        <span>Stake: ${formatCurrency(item.stake)} @ ${formatOddsLabel(item.odds)}</span>
+                        <span class="${profitClass}">Profit: ${formatCurrency(item.profit)}</span>
+                        <span>Balance: ${formatCurrency(item.balanceAfter)}</span>
+                    `;
+                    betHistoryList.appendChild(listItem);
+                });
+            }
+
+            function loadBetHistory() {
+                const stored = localStorage.getItem('shirtHiLoBetHistory');
+                if (!stored) {
+                    betHistory = [];
+                    return;
+                }
+                try {
+                    const parsed = JSON.parse(stored);
+                    betHistory = Array.isArray(parsed) ? parsed : [];
+                } catch (error) {
+                    betHistory = [];
+                }
+            }
+
             // --- 4. Event Listeners ---
             btnHigher.addEventListener('click', () => checkGuess('higher'));
             btnLower.addEventListener('click', () => checkGuess('lower'));
             btnRestart.addEventListener('click', initGame);
+
+            stakeInput.addEventListener('change', () => {
+                let value = getStakeValue();
+                if (value > balance) {
+                    value = balance;
+                }
+                stakeInput.value = value > 0 ? formatCurrency(value) : '';
+            });
+
+            btnStakeMin.addEventListener('click', () => {
+                if (balance <= 0) {
+                    stakeInput.value = '';
+                    return;
+                }
+                const minStake = Math.min(1, balance);
+                const adjusted = minStake < 0.1 ? balance : minStake;
+                stakeInput.value = adjusted > 0 ? formatCurrency(adjusted) : '';
+            });
+
+            btnStakeMax.addEventListener('click', () => {
+                if (balance < 0.1) {
+                    stakeInput.value = '';
+                    return;
+                }
+                stakeInput.value = formatCurrency(balance);
+            });
 
             // Start the game!
             initGame();
