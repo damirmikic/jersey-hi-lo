@@ -14,12 +14,14 @@
             --color-green: #5cb85c;
             --color-red: #d9534f;
             --color-blue: #00529B; /* Jersey primary color */
+            --color-gold: #fdd835;
             --color-white: #ffffff;
             --color-dark: #222222;
             --color-text: #f0f0f0;
             --font-main: 'Inter', sans-serif;
             --reveal-time: 400ms;
             --result-time: 1000ms;
+            --glow-color: rgba(255, 215, 0, 0.35);
         }
 
         * {
@@ -49,14 +51,17 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 20px;
+            padding: 32px 28px;
             width: 100%;
-            max-width: 900px;
-            min-height: 100vh;
+            max-width: 960px;
+            min-height: 90vh;
             text-align: center;
-            /* Added for animation feedback */
-            border: 4px solid transparent;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(18, 46, 104, 0.45), rgba(7, 18, 46, 0.65));
+            backdrop-filter: blur(18px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         h1 {
@@ -71,11 +76,12 @@
             display: flex;
             justify-content: space-around;
             width: 100%;
-            max-width: 500px;
-            margin-bottom: 30px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 15px;
+            max-width: 520px;
+            margin-bottom: 36px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.25));
+            border-radius: 18px;
+            padding: 18px 24px;
+            box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.05);
         }
 
         .score-box {
@@ -112,13 +118,14 @@
         /* --- Bankroll & Betting Controls --- */
         .bankroll-panel {
             width: 100%;
-            max-width: 600px;
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 25px;
+            max-width: 640px;
+            background: linear-gradient(120deg, rgba(9, 26, 64, 0.8), rgba(15, 43, 102, 0.55));
+            border-radius: 22px;
+            padding: 26px;
+            margin-bottom: 28px;
             display: grid;
-            gap: 16px;
+            gap: 20px;
+            box-shadow: inset 0 1px 12px rgba(255, 255, 255, 0.08);
         }
 
         .bankroll-stats {
@@ -134,8 +141,9 @@
 
         .bankroll-stats span {
             color: var(--color-white);
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             margin-left: 8px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
         }
 
         .stake-controls {
@@ -160,12 +168,13 @@
 
         #stake-input {
             flex: 1;
-            padding: 10px 16px;
-            border-radius: 12px;
-            border: none;
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
             font-size: 1rem;
             background: rgba(255, 255, 255, 0.08);
             color: var(--color-white);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
         }
 
         #stake-input:focus {
@@ -173,37 +182,35 @@
         }
 
         .stake-input-row button {
-            padding: 10px 16px;
+            padding: 10px 18px;
             border-radius: 12px;
             border: none;
-            background: rgba(255, 255, 255, 0.12);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04));
             color: var(--color-white);
             font-weight: 700;
             letter-spacing: 0.5px;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .stake-input-row button:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.28);
             transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
         }
 
-        .odds-display {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-weight: 600;
-            color: #d1d1d1;
+        .balance-warning {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.85);
+            background: linear-gradient(135deg, rgba(217, 83, 79, 0.4), rgba(201, 48, 44, 0.2));
+            border: 1px solid rgba(217, 83, 79, 0.35);
+            padding: 10px 14px;
+            border-radius: 12px;
+            text-align: center;
         }
 
-        .odds-display span {
-            color: var(--color-white);
-        }
-
-        .odds-display small {
-            font-size: 0.75rem;
-            opacity: 0.8;
+        .balance-warning.hidden {
+            display: none;
         }
 
         .bet-history {
@@ -300,71 +307,83 @@
         /* The Football Jersey "Card" */
         .jersey {
             width: 100%;
-            aspect-ratio: 4 / 4.5; /* Slightly taller than wide */
-            max-width: 240px;
+            aspect-ratio: 3 / 4; /* Slightly taller than wide */
+            max-width: 260px;
             margin: 0 auto;
-            border-radius: 15px 15px 8px 8px; /* Shoulders */
+            border-radius: 22px;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), inset 0 4px 10px rgba(255, 255, 255, 0.1);
             overflow: hidden;
-            background-color: var(--color-blue);
-            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.6));
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
         }
 
-        /* Jersey Collar */
-        .jersey::before {
+        .jersey::after {
             content: '';
             position: absolute;
-            top: 15px;
-            width: 60px;
-            height: 30px;
-            border: 5px solid var(--color-white);
-            border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
-            background: var(--color-blue);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow: inset 0 10px 45px rgba(255, 255, 255, 0.08);
+            pointer-events: none;
         }
 
-        .jersey span {
-            font-size: 100px;
+        .jersey canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .jersey-number {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(3.5rem, 8vw, 5.8rem);
             font-weight: 900;
             color: var(--color-white);
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 14px 22px rgba(0, 0, 0, 0.65);
+            letter-spacing: -1px;
+            pointer-events: none;
             transition: color 0.3s ease;
         }
 
-        /* "Hidden" State for Next Card */
-        #next-jersey {
-            background-color: var(--color-dark);
-            opacity: 0.8;
-            transform: scale(0.95);
-        }
-        
-        #next-jersey::before {
-            background-color: var(--color-dark);
-            border-color: #444;
+        .jersey-number.revealed {
+            animation: jersey-number-reveal 0.9s cubic-bezier(0.22, 0.82, 0.23, 0.99);
         }
 
-        #next-jersey span {
-            color: #666;
-        }
-        
-        /* "Reveal" Animation State */
-        #next-jersey.reveal {
-            background-color: var(--color-red); /* Reveals as a new color */
-            opacity: 1;
-            transform: scale(1);
+        @keyframes jersey-number-reveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.2) rotateX(-85deg);
+                filter: blur(12px);
+            }
+            55% {
+                opacity: 1;
+                transform: scale(1.15) rotateX(12deg);
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateX(0deg);
+            }
         }
 
-        #next-jersey.reveal::before {
-            background-color: var(--color-red);
-            border-color: var(--color-white);
+        .jersey.revealing {
+            box-shadow: 0 28px 60px rgba(0, 0, 0, 0.65), 0 0 45px var(--glow-color);
+            transform: translateY(-6px) scale(1.02);
         }
 
-        #next-jersey.reveal span {
-            color: var(--color-white);
+        .jersey.waiting {
+            filter: saturate(0.35) brightness(0.82);
+            box-shadow: 0 15px 32px rgba(0, 0, 0, 0.45);
+        }
+
+        .jersey.waiting .jersey-number {
+            color: rgba(255, 255, 255, 0.22);
+            text-shadow: none;
         }
         
         /* --- 5. Controls & Messages --- */
@@ -376,22 +395,26 @@
 
         .controls button {
             font-family: var(--font-main);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            padding: 15px 30px;
+            padding: 18px 36px;
             border: none;
-            border-radius: 50px;
+            border-radius: 28px;
             cursor: pointer;
             color: var(--color-white);
             min-width: 140px;
             text-transform: uppercase;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
 
         .controls button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 32px rgba(0, 0, 0, 0.45);
         }
 
         .controls button:active:not(:disabled) {
@@ -404,20 +427,39 @@
             cursor: not-allowed;
         }
 
+        .controls button.no-odds .odds-label {
+            opacity: 0.45;
+        }
+
         #btn-lower {
-            background-color: var(--color-red);
+            background: linear-gradient(140deg, rgba(217, 83, 79, 0.95), rgba(169, 68, 66, 0.95));
         }
 
         #btn-higher {
-            background-color: var(--color-green);
+            background: linear-gradient(140deg, rgba(92, 184, 92, 0.95), rgba(60, 118, 61, 0.95));
+        }
+
+        .controls button .arrow {
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .controls button .odds-label {
+            font-size: 1rem;
+            letter-spacing: 0.4px;
+            opacity: 0.85;
+            text-transform: none;
         }
 
         #message-area {
-            font-size: 1.5rem;
-            font-weight: 700;
-            height: 40px; /* Reserve space */
-            line-height: 40px;
-            margin-bottom: 10px;
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            height: 44px; /* Reserve space */
+            line-height: 44px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            text-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
         }
 
         #btn-restart {
@@ -543,31 +585,35 @@
                     <button id="btn-stake-max" type="button">Max</button>
                 </div>
             </div>
-            <div class="odds-display">
-                <div>Higher Odds: <span id="higher-odds">—</span></div>
-                <div>Lower Odds: <span id="lower-odds">—</span></div>
-                <small>Odds update based on the remaining shirt numbers.</small>
-            </div>
+            <p id="balance-warning" class="balance-warning hidden">Balance too low to place this stake.</p>
         </section>
 
         <div class="game-area">
             <div class="card-container" id="current-card-container">
                 <h3>Current</h3>
                 <div class="jersey" id="current-jersey">
-                    <span id="current-number">?</span>
+                    <canvas class="jersey-canvas"></canvas>
+                    <span class="jersey-number" id="current-number">?</span>
                 </div>
             </div>
             <div class="card-container" id="next-card-container">
                 <h3>Next</h3>
-                <div class="jersey" id="next-jersey">
-                    <span id="next-number">?</span>
+                <div class="jersey waiting" id="next-jersey">
+                    <canvas class="jersey-canvas"></canvas>
+                    <span class="jersey-number" id="next-number">?</span>
                 </div>
             </div>
         </div>
 
         <div class="controls" id="controls-area">
-            <button id="btn-lower">▼ Lower</button>
-            <button id="btn-higher">▲ Higher</button>
+            <button id="btn-lower" aria-label="Guess lower">
+                <span class="arrow">▼</span>
+                <span class="odds-label" id="lower-odds-label">—</span>
+            </button>
+            <button id="btn-higher" aria-label="Guess higher">
+                <span class="arrow">▲</span>
+                <span class="odds-label" id="higher-odds-label">—</span>
+            </button>
         </div>
 
         <p id="message-area">Loading game...</p>
@@ -587,8 +633,253 @@
 
     </main>
 
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            class JerseyRenderer {
+                constructor(container, options = {}) {
+                    this.container = container;
+                    this.canvas = container.querySelector('canvas');
+                    this.color = options.baseColor ?? 0x0a4dbf;
+                    this.scene = new THREE.Scene();
+                    this.renderer = new THREE.WebGLRenderer({
+                        canvas: this.canvas,
+                        alpha: true,
+                        antialias: true
+                    });
+                    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                    this.renderer.setClearColor(0x000000, 0);
+                    if ('outputColorSpace' in this.renderer) {
+                        this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+                    } else if ('outputEncoding' in this.renderer) {
+                        this.renderer.outputEncoding = THREE.sRGBEncoding;
+                    }
+                    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                    this.renderer.toneMappingExposure = 1.0;
+                    this.clock = new THREE.Clock();
+
+                    this.camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+                    this.camera.position.set(0, 0.2, 8);
+
+                    const ambient = new THREE.AmbientLight(0xffffff, 0.65);
+                    this.scene.add(ambient);
+
+                    const keyLight = new THREE.DirectionalLight(0xffffff, 1.12);
+                    keyLight.position.set(6, 8, 8);
+                    this.scene.add(keyLight);
+
+                    const rimLight = new THREE.DirectionalLight(0x3c64ff, 0.55);
+                    rimLight.position.set(-5, -4, -6);
+                    this.scene.add(rimLight);
+
+                    this.jerseyGroup = new THREE.Group();
+                    this.jerseyGroup.rotation.x = -0.25;
+                    this.scene.add(this.jerseyGroup);
+
+                    this.bodyMaterial = this.createBodyMaterial();
+                    const bodyMesh = this.createBodyMesh();
+                    this.jerseyGroup.add(bodyMesh);
+
+                    this.shoulderMaterial = new THREE.MeshStandardMaterial({
+                        color: new THREE.Color(this.color).offsetHSL(0, -0.18, 0.32),
+                        roughness: 0.32,
+                        metalness: 0.2
+                    });
+                    const shoulder = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.32, 0.18), this.shoulderMaterial);
+                    shoulder.position.set(0, 1.55, 0.4);
+                    this.jerseyGroup.add(shoulder);
+
+                    this.collarMaterial = this.shoulderMaterial.clone();
+                    const collar = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.08, 28, 64), this.collarMaterial);
+                    collar.rotation.x = Math.PI / 2;
+                    collar.position.set(0, 1.28, 0.45);
+                    this.jerseyGroup.add(collar);
+
+                    this.sideMaterial = new THREE.MeshStandardMaterial({
+                        color: new THREE.Color(this.color).offsetHSL(-0.05, -0.06, 0.2),
+                        roughness: 0.55,
+                        metalness: 0.12,
+                        transparent: true,
+                        opacity: 0.68
+                    });
+                    const sideGeometry = new THREE.BoxGeometry(0.45, 3.0, 0.22);
+                    const sideLeft = new THREE.Mesh(sideGeometry, this.sideMaterial);
+                    sideLeft.position.set(-1.65, -0.35, 0.12);
+                    this.jerseyGroup.add(sideLeft);
+                    const sideRight = new THREE.Mesh(sideGeometry, this.sideMaterial);
+                    sideRight.position.set(1.65, -0.35, 0.12);
+                    this.jerseyGroup.add(sideRight);
+
+                    this.baseRotation = 0;
+                    this.revealPulse = 0;
+
+                    this.animate = this.animate.bind(this);
+                    this.updateSize = this.updateSize.bind(this);
+                    this.handleWindowResize = () => this.updateSize();
+
+                    window.addEventListener('resize', this.handleWindowResize);
+                    if (typeof ResizeObserver !== 'undefined') {
+                        this.resizeObserver = new ResizeObserver(() => this.updateSize());
+                        this.resizeObserver.observe(this.container);
+                    }
+
+                    this.updateSize();
+                    requestAnimationFrame(this.animate);
+                }
+
+                createBodyMaterial() {
+                    const material = new THREE.MeshStandardMaterial({
+                        color: new THREE.Color(this.color),
+                        roughness: 0.45,
+                        metalness: 0.12,
+                        map: this.createFabricTexture()
+                    });
+                    return material;
+                }
+
+                createBodyMesh() {
+                    const shape = new THREE.Shape();
+                    shape.moveTo(-1.9, -2.4);
+                    shape.lineTo(-1.9, -0.7);
+                    shape.quadraticCurveTo(-2.3, 0.1, -1.6, 0.9);
+                    shape.lineTo(-1.2, 1.35);
+                    shape.lineTo(-0.6, 1.35);
+                    shape.quadraticCurveTo(-0.2, 1.35, 0, 1.55);
+                    shape.quadraticCurveTo(0.2, 1.35, 0.6, 1.35);
+                    shape.lineTo(1.2, 1.35);
+                    shape.lineTo(1.6, 0.9);
+                    shape.quadraticCurveTo(2.3, 0.1, 1.9, -0.7);
+                    shape.lineTo(1.9, -2.4);
+                    shape.lineTo(0.9, -2.4);
+                    shape.quadraticCurveTo(0.5, -1.4, 0, -1.4);
+                    shape.quadraticCurveTo(-0.5, -1.4, -0.9, -2.4);
+                    shape.closePath();
+
+                    const extrudeSettings = {
+                        depth: 0.6,
+                        bevelEnabled: true,
+                        bevelThickness: 0.12,
+                        bevelSize: 0.08,
+                        bevelSegments: 6
+                    };
+
+                    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                    geometry.center();
+
+                    const mesh = new THREE.Mesh(geometry, this.bodyMaterial);
+                    mesh.castShadow = false;
+                    mesh.receiveShadow = false;
+                    return mesh;
+                }
+
+                createFabricTexture() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 512;
+                    canvas.height = 1024;
+                    const ctx = canvas.getContext('2d');
+
+                    const base = new THREE.Color(this.color);
+                    const highlight = base.clone().offsetHSL(0.02, -0.08, 0.18);
+                    const shadow = base.clone().offsetHSL(-0.04, 0.0, -0.25);
+
+                    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    gradient.addColorStop(0, `#${highlight.getHexString()}`);
+                    gradient.addColorStop(0.45, `#${base.getHexString()}`);
+                    gradient.addColorStop(1, `#${shadow.getHexString()}`);
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.globalAlpha = 0.16;
+                    ctx.fillStyle = '#ffffff';
+                    for (let y = 0; y < canvas.height; y += 28) {
+                        ctx.fillRect(0, y, canvas.width, 12);
+                    }
+
+                    ctx.globalAlpha = 0.1;
+                    ctx.fillStyle = '#000000';
+                    for (let x = 0; x < canvas.width; x += 22) {
+                        ctx.fillRect(x, 0, 3, canvas.height);
+                    }
+
+                    const texture = new THREE.CanvasTexture(canvas);
+                    if (this.renderer?.capabilities?.getMaxAnisotropy) {
+                        texture.anisotropy = Math.min(16, this.renderer.capabilities.getMaxAnisotropy());
+                    }
+                    texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+                    texture.needsUpdate = true;
+                    return texture;
+                }
+
+                updateSize() {
+                    const { width, height } = this.container.getBoundingClientRect();
+                    const w = Math.max(1, width);
+                    const h = Math.max(1, height);
+                    this.camera.aspect = w / h;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(w, h, false);
+                }
+
+                animate() {
+                    const delta = this.clock.getDelta();
+                    const elapsed = this.clock.elapsedTime;
+
+                    this.jerseyGroup.rotation.y = Math.sin(elapsed * 0.6) * 0.25 + this.baseRotation;
+                    this.jerseyGroup.position.y = Math.sin(elapsed * 0.85) * 0.05;
+
+                    if (this.revealPulse > 0) {
+                        this.revealPulse = Math.max(0, this.revealPulse - delta * 1.6);
+                        const intensity = Math.sin((1 - this.revealPulse) * Math.PI);
+                        const scale = 1 + intensity * 0.14;
+                        this.jerseyGroup.scale.setScalar(scale);
+                    } else if (Math.abs(this.jerseyGroup.scale.x - 1) > 0.001) {
+                        const lerp = THREE.MathUtils.lerp(this.jerseyGroup.scale.x, 1, 0.12);
+                        this.jerseyGroup.scale.setScalar(lerp);
+                    }
+
+                    this.renderer.render(this.scene, this.camera);
+                    requestAnimationFrame(this.animate);
+                }
+
+                triggerReveal() {
+                    this.revealPulse = 1;
+                }
+
+                setColor(colorHex) {
+                    this.color = colorHex;
+                    const base = new THREE.Color(colorHex);
+                    if (this.bodyMaterial.map) {
+                        this.bodyMaterial.map.dispose();
+                    }
+                    this.bodyMaterial.map = this.createFabricTexture();
+                    this.bodyMaterial.color.copy(base);
+                    this.bodyMaterial.needsUpdate = true;
+
+                    const accent = base.clone().offsetHSL(-0.02, -0.12, 0.35);
+                    const sideAccent = base.clone().offsetHSL(-0.05, -0.05, 0.18);
+
+                    this.shoulderMaterial.color.copy(accent);
+                    this.shoulderMaterial.needsUpdate = true;
+
+                    this.collarMaterial.color.copy(accent.clone().offsetHSL(0, 0, 0.08));
+                    this.collarMaterial.needsUpdate = true;
+
+                    this.sideMaterial.color.copy(sideAccent);
+                    this.sideMaterial.needsUpdate = true;
+                }
+            }
+
+            const jerseyHiddenColor = 0x101820;
+
+            function jerseyColorForValue(value) {
+                const normalized = Math.min(1, Math.max(0, (value - 1) / 22));
+                const hue = THREE.MathUtils.lerp(0.58, 0.02, normalized);
+                const saturation = THREE.MathUtils.lerp(0.68, 0.55, normalized);
+                const lightness = THREE.MathUtils.lerp(0.36, 0.55, normalized * 0.6 + 0.2);
+                const color = new THREE.Color();
+                color.setHSL(hue, saturation, lightness);
+                return color.getHex();
+            }
 
             // --- 1. DOM Element Selection ---
             const currentStreakEl = document.getElementById('current-streak');
@@ -608,9 +899,14 @@
             const stakeInput = document.getElementById('stake-input');
             const btnStakeMin = document.getElementById('btn-stake-min');
             const btnStakeMax = document.getElementById('btn-stake-max');
-            const higherOddsEl = document.getElementById('higher-odds');
-            const lowerOddsEl = document.getElementById('lower-odds');
+            const balanceWarningEl = document.getElementById('balance-warning');
+            const lowerOddsLabel = document.getElementById('lower-odds-label');
+            const higherOddsLabel = document.getElementById('higher-odds-label');
             const betHistoryList = document.getElementById('bet-history-list');
+
+            const currentJerseyRenderer = new JerseyRenderer(currentJerseyEl, { baseColor: jerseyColorForValue(11) });
+            const nextJerseyRenderer = new JerseyRenderer(nextJerseyEl, { baseColor: jerseyHiddenColor });
+            nextJerseyRenderer.setColor(jerseyHiddenColor);
 
             // --- 2. Game State Variables ---
             let deck = [];
@@ -623,6 +919,67 @@
             let betHistory = [];
             let pendingBet = null;
             let oddsSnapshot = { higher: null, lower: null };
+            const jerseyRevealTimeouts = new WeakMap();
+
+            function triggerNumberReveal(element) {
+                element.classList.remove('revealed');
+                void element.offsetWidth;
+                element.classList.add('revealed');
+            }
+
+            function triggerJerseyReveal(jerseyElement, renderer) {
+                jerseyElement.classList.remove('waiting');
+                jerseyElement.classList.add('revealing');
+                renderer?.triggerReveal();
+                const existingTimeout = jerseyRevealTimeouts.get(jerseyElement);
+                if (existingTimeout) {
+                    clearTimeout(existingTimeout);
+                }
+                const timeoutId = setTimeout(() => {
+                    jerseyElement.classList.remove('revealing');
+                    jerseyRevealTimeouts.delete(jerseyElement);
+                }, 900);
+                jerseyRevealTimeouts.set(jerseyElement, timeoutId);
+            }
+
+            function resetNextCardDisplay() {
+                const timeoutId = jerseyRevealTimeouts.get(nextJerseyEl);
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                    jerseyRevealTimeouts.delete(nextJerseyEl);
+                }
+                nextJerseyEl.classList.remove('revealing');
+                nextJerseyEl.classList.add('waiting');
+                nextNumberEl.classList.remove('revealed');
+                nextNumberEl.textContent = '?';
+                nextJerseyRenderer.setColor(jerseyHiddenColor);
+            }
+
+            function updateStakeWarning() {
+                const stake = getStakeValue();
+                if (balance < 0.1) {
+                    balanceWarningEl.textContent = 'Balance too low to place a new bet. Adjust stake or restart to top up.';
+                    balanceWarningEl.classList.remove('hidden');
+                } else if (stake > balance) {
+                    balanceWarningEl.textContent = 'Stake exceeds your available balance. Lower the stake to continue.';
+                    balanceWarningEl.classList.remove('hidden');
+                } else if (stake <= 0) {
+                    balanceWarningEl.textContent = 'Enter a stake above zero to enable the arrows.';
+                    balanceWarningEl.classList.remove('hidden');
+                } else {
+                    balanceWarningEl.classList.add('hidden');
+                }
+            }
+
+            function updateControls(forceDisable = false) {
+                const stake = getStakeValue();
+                const insufficient = balance < 0.1 || stake <= 0 || stake > balance;
+                const disableAll = forceDisable || isRevealing;
+                btnLower.disabled = disableAll || insufficient || !oddsSnapshot.lower;
+                btnHigher.disabled = disableAll || insufficient || !oddsSnapshot.higher;
+                btnLower.classList.toggle('no-odds', !oddsSnapshot.lower);
+                btnHigher.classList.toggle('no-odds', !oddsSnapshot.higher);
+            }
 
             // --- 3. Core Game Functions ---
 
@@ -679,6 +1036,9 @@
                 // Draw the first card
                 currentCard = drawCard();
                 currentNumberEl.textContent = currentCard;
+                triggerNumberReveal(currentNumberEl);
+                currentJerseyRenderer.setColor(jerseyColorForValue(currentCard));
+                currentJerseyEl.classList.remove('waiting');
 
                 loadBalance();
                 loadBetHistory();
@@ -689,14 +1049,11 @@
                 messageArea.textContent = 'Guess higher or lower!';
                 btnRestart.classList.add('hidden');
                 controlsArea.classList.remove('hidden');
-                setButtonsDisabled(balance < 0.1);
-
-                // Reset the "next" card to its hidden state
-                nextJerseyEl.classList.remove('reveal');
-                nextNumberEl.textContent = '?';
-
-                updateOddsDisplay();
+                resetNextCardDisplay();
                 isRevealing = false;
+                updateOddsDisplay();
+                updateStakeWarning();
+                updateControls();
             }
 
             /**
@@ -707,31 +1064,37 @@
                 if (isRevealing) return; // Don't allow clicks during reveal
 
                 isRevealing = true;
-                setButtonsDisabled(true);
+                updateControls(true);
 
                 const stakeValue = getStakeValue();
                 if (stakeValue <= 0) {
                     messageArea.textContent = 'Enter a stake above zero to play.';
-                    resetRevealState();
+                    isRevealing = false;
+                    updateStakeWarning();
+                    updateControls();
                     return;
                 }
 
                 if (stakeValue > balance) {
                     messageArea.textContent = 'Insufficient balance for that stake.';
-                    resetRevealState();
+                    isRevealing = false;
+                    updateStakeWarning();
+                    updateControls();
                     return;
                 }
 
                 const selectedOdds = guess === 'higher' ? oddsSnapshot.higher : oddsSnapshot.lower;
                 if (!selectedOdds) {
                     messageArea.textContent = 'No valid odds available for that guess.';
-                    resetRevealState();
+                    isRevealing = false;
+                    updateControls();
                     return;
                 }
 
                 balance = roundCurrency(balance - stakeValue);
                 updateBalanceDisplay();
                 persistBalance();
+                updateStakeWarning();
 
                 pendingBet = {
                     guess,
@@ -744,7 +1107,10 @@
 
                 // 2. Start the reveal animation
                 nextNumberEl.textContent = nextCard;
-                nextJerseyEl.classList.add('reveal'); // Triggers CSS transition
+                triggerNumberReveal(nextNumberEl);
+                nextJerseyRenderer.setColor(jerseyColorForValue(nextCard));
+                triggerJerseyReveal(nextJerseyEl, nextJerseyRenderer);
+                messageArea.textContent = 'Revealing the next number...';
 
                 // 3. Determine win/loss
                 // Note: A tie (nextCard === currentCard) counts as a LOSS.
@@ -762,7 +1128,7 @@
                     } else {
                         handleLoss();
                     }
-                }, 500); // Wait 500ms (matches CSS animation)
+                }, 700); // Matches the jersey reveal animation
             }
 
             /**
@@ -776,6 +1142,7 @@
                 balance = roundCurrency(balance + payout);
                 updateBalanceDisplay();
                 persistBalance();
+                updateStakeWarning();
 
                 messageArea.textContent = `Correct! You won ${formatCurrency(payout)} (profit ${formatCurrency(profit)}).`;
                 gameContainer.classList.add('win-flash');
@@ -808,9 +1175,12 @@
                     // 1. Move the "next" card to the "current" position
                     currentCard = nextCard;
                     currentNumberEl.textContent = currentCard;
+                    triggerNumberReveal(currentNumberEl);
+                    currentJerseyRenderer.setColor(jerseyColorForValue(currentCard));
+                    triggerJerseyReveal(currentJerseyEl, currentJerseyRenderer);
 
                     // 2. Reset the "next" card to its hidden state
-                    nextJerseyEl.classList.remove('reveal');
+                    resetNextCardDisplay();
 
                     // 3. Reset UI for the next turn
                     messageArea.textContent = 'Guess higher or lower!';
@@ -818,15 +1188,10 @@
                     currentStreakEl.classList.remove('pop');
 
                     // 4. Re-enable buttons
-                    setButtonsDisabled(false);
                     isRevealing = false;
-
-                    // Set '?' text *after* the hide animation starts
-                    setTimeout(() => {
-                        nextNumberEl.textContent = '?';
-                    }, 300); // Must be less than the transition time
-
                     updateOddsDisplay();
+                    updateStakeWarning();
+                    updateControls();
 
                 }, 1000); // 1 second to read "Correct!"
             }
@@ -835,7 +1200,7 @@
              * Handles the "Loss" scenario.
              */
             function handleLoss() {
-                const { stake, guess } = pendingBet;
+                const { stake, guess, odds } = pendingBet;
                 messageArea.textContent = `Wrong! It was ${nextCard}. You lost ${formatCurrency(stake)}.`;
                 gameContainer.classList.add('loss-flash');
 
@@ -854,12 +1219,15 @@
                 // Hide controls and show "Play Again" button
                 controlsArea.classList.add('hidden');
                 btnRestart.classList.remove('hidden');
+                updateControls(true);
+                isRevealing = false;
+                balanceWarningEl.classList.add('hidden');
 
                 recordBetHistory({
                     outcome: 'Loss',
                     guess,
                     stake,
-                    odds: oddsSnapshot[guess],
+                    odds,
                     nextCard,
                     profit: -stake,
                     balanceAfter: balance
@@ -872,20 +1240,6 @@
                 }, 500);
                 
                 // Game is over, isRevealing stays true (or irrelevant) until restart
-            }
-
-            /**
-             * Helper function to enable/disable control buttons.
-             * @param {boolean} isDisabled - True to disable, false to enable.
-             */
-            function setButtonsDisabled(isDisabled) {
-                btnLower.disabled = isDisabled;
-                btnHigher.disabled = isDisabled;
-            }
-
-            function resetRevealState() {
-                isRevealing = false;
-                setButtonsDisabled(balance < 0.1);
             }
 
             function loadBalance() {
@@ -910,11 +1264,8 @@
                 } else {
                     stakeInput.value = '';
                 }
-                if (balance < 0.1) {
-                    setButtonsDisabled(true);
-                } else if (!isRevealing) {
-                    setButtonsDisabled(false);
-                }
+                updateStakeWarning();
+                updateControls();
             }
 
             function getStakeValue() {
@@ -928,9 +1279,14 @@
             function updateOddsDisplay() {
                 const remaining = deck.length;
                 if (remaining <= 0) {
-                    higherOddsEl.textContent = '—';
-                    lowerOddsEl.textContent = '—';
                     oddsSnapshot = { higher: null, lower: null };
+                    higherOddsLabel.textContent = '—';
+                    lowerOddsLabel.textContent = '—';
+                    btnHigher.setAttribute('title', 'No higher odds available');
+                    btnHigher.setAttribute('aria-label', 'Higher option unavailable');
+                    btnLower.setAttribute('title', 'No lower odds available');
+                    btnLower.setAttribute('aria-label', 'Lower option unavailable');
+                    updateControls();
                     return;
                 }
 
@@ -943,17 +1299,31 @@
                 const higherOdds = probabilityToDecimalOdds(higherProb);
                 const lowerOdds = probabilityToDecimalOdds(lowerProb);
 
-                higherOddsEl.textContent = higherOdds
-                    ? `${(higherProb * 100).toFixed(1)}% (${higherOdds.toFixed(2)}x)`
-                    : '—';
-                lowerOddsEl.textContent = lowerOdds
-                    ? `${(lowerProb * 100).toFixed(1)}% (${lowerOdds.toFixed(2)}x)`
-                    : '—';
-
                 oddsSnapshot = {
                     higher: higherOdds,
                     lower: lowerOdds
                 };
+
+                higherOddsLabel.textContent = formatOddsLabel(higherOdds);
+                lowerOddsLabel.textContent = formatOddsLabel(lowerOdds);
+
+                if (higherOdds) {
+                    btnHigher.setAttribute('title', `Higher @ ${higherOdds.toFixed(2)}x`);
+                    btnHigher.setAttribute('aria-label', `Guess higher @ ${higherOdds.toFixed(2)}x`);
+                } else {
+                    btnHigher.setAttribute('title', 'No higher odds available');
+                    btnHigher.setAttribute('aria-label', 'Higher option unavailable');
+                }
+
+                if (lowerOdds) {
+                    btnLower.setAttribute('title', `Lower @ ${lowerOdds.toFixed(2)}x`);
+                    btnLower.setAttribute('aria-label', `Guess lower @ ${lowerOdds.toFixed(2)}x`);
+                } else {
+                    btnLower.setAttribute('title', 'No lower odds available');
+                    btnLower.setAttribute('aria-label', 'Lower option unavailable');
+                }
+
+                updateControls();
             }
 
             function probabilityToDecimalOdds(probability) {
@@ -1037,24 +1407,39 @@
                     value = balance;
                 }
                 stakeInput.value = value > 0 ? formatCurrency(value) : '';
+                updateStakeWarning();
+                updateControls();
+            });
+
+            stakeInput.addEventListener('input', () => {
+                updateStakeWarning();
+                updateControls();
             });
 
             btnStakeMin.addEventListener('click', () => {
                 if (balance <= 0) {
                     stakeInput.value = '';
+                    updateStakeWarning();
+                    updateControls();
                     return;
                 }
                 const minStake = Math.min(1, balance);
                 const adjusted = minStake < 0.1 ? balance : minStake;
                 stakeInput.value = adjusted > 0 ? formatCurrency(adjusted) : '';
+                updateStakeWarning();
+                updateControls();
             });
 
             btnStakeMax.addEventListener('click', () => {
                 if (balance < 0.1) {
                     stakeInput.value = '';
+                    updateStakeWarning();
+                    updateControls();
                     return;
                 }
                 stakeInput.value = formatCurrency(balance);
+                updateStakeWarning();
+                updateControls();
             });
 
             // Start the game!
